@@ -16,9 +16,6 @@ class Player:
                      # x, y, width, height
         self.speed = speed
 
-    def gravity(self):
-
-
     def player_run(self):
         shell_phase = 0
         max_phase = 6
