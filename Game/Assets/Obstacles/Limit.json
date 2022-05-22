@@ -10,7 +10,8 @@
         }
     },
     "moving": {
-
+        "min": 100,
+        "max": 200
     },
     "aerial": {
         "static": {

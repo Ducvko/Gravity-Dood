@@ -15,6 +15,7 @@
 #-----------------------------------------------------------------------------
 
 import pygame
+from Assets.Player_Assets.Player import Player
 
 def main():
     #-----------------------------Setup------------------------------------------------------#
@@ -26,6 +27,8 @@ def main():
 
     # Create surface of (width, height), and its window.
     mainSurface = pygame.display.set_mode((surfaceSize[0], surfaceSize[1]))
+
+    player_sprite = Player((200, 200), mainSurface, surfaceSize, 0)
 
     #-----------------------------Program Variable Initialization----------------------------#
     # Set up some data to describe a small circle and its color
@@ -48,6 +51,8 @@ def main():
         # We draw everything from scratch on each frame.
         # So first fill everything with the background color
         mainSurface.fill((0, 200, 255))
+
+        player_sprite.player_run()
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
