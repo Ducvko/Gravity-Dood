@@ -30,6 +30,9 @@ def main():
 
     player_sprite = Player((200, 200), mainSurface, surfaceSize, 0)
 
+    frame_count = 0
+    game_start
+
     #-----------------------------Program Variable Initialization----------------------------#
     # Set up some data to describe a small circle and its color
 
@@ -52,13 +55,15 @@ def main():
         # So first fill everything with the background color
         mainSurface.fill((0, 200, 255))
 
-        player_sprite.player_run()
+        player_sprite.frame_update(frame_count)
+        player_sprite.draw_player()
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
         
+        frame_count += 1
         clock.tick(60) #Force frame rate to be slower
-
+ 
 
     pygame.quit()     # Once we leave the loop, close the window.
 
