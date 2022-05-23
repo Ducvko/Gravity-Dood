@@ -31,7 +31,7 @@ def main():
     player_sprite = Player((200, 200), mainSurface, surfaceSize, 0)
 
     frame_count = 0
-    game_start
+    game_start = False
 
     #-----------------------------Program Variable Initialization----------------------------#
     # Set up some data to describe a small circle and its color
