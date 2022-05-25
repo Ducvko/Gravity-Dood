@@ -15,8 +15,9 @@
 #-----------------------------------------------------------------------------
 
 import pygame
+import json
 from Assets.Player_Assets.Player import Player
-from Assets.Collidables.Static.Short.Short import Spike
+from Assets.Collidables.Static.Short.Short import Spike, Saw
 
 def main():
     #-----------------------------Setup------------------------------------------------------#
@@ -32,6 +33,7 @@ def main():
     player_sprite = Player((200, 200), mainSurface, surfaceSize, 0)
 
     spike_trap = Spike([100, 100], mainSurface)
+    saw_trap = Saw((100, 200), mainSurface)
 
     frame_count = 0
     game_start = False
@@ -63,6 +65,9 @@ def main():
 
         spike_trap.draw_trap(1, spike_trap.posX, spike_trap.posY)
         spike_trap.update_animation(frame_count, spike_trap.spike_rate)
+
+        saw_trap.draw_trap(0, saw_trap.posX, saw_trap.posY)
+        saw_trap.update_animation(frame_count, saw_trap.saw_rate)
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
