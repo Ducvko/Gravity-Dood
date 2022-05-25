@@ -16,6 +16,7 @@
 
 import pygame
 from Assets.Player_Assets.Player import Player
+from Assets.Collidables.Static.Short.Short import Spike
 
 def main():
     #-----------------------------Setup------------------------------------------------------#
@@ -29,6 +30,8 @@ def main():
     mainSurface = pygame.display.set_mode((surfaceSize[0], surfaceSize[1]))
 
     player_sprite = Player((200, 200), mainSurface, surfaceSize, 0)
+
+    spike_trap = Spike([100, 100], mainSurface)
 
     frame_count = 0
     game_start = False
@@ -57,6 +60,9 @@ def main():
 
         player_sprite.frame_update(frame_count)
         player_sprite.draw_player()
+
+        spike_trap.draw_trap(1, spike_trap.posX, spike_trap.posY)
+        spike_trap.update_animation(frame_count, spike_trap.spike_rate)
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
