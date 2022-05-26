@@ -52,7 +52,9 @@ def main():
         if ev.type == pygame.QUIT:  # Window close button clicked?
             break                   #   ... leave game loop
 
-
+        if ev.type == pygame.KEYDOWN:
+            if ev.key == pygame.K_SPACE:
+                player_sprite.upside_down = not player_sprite.upside_down      
         #-----------------------------Program Logic---------------------------------------------#
         # Update your game objects and data structures here...
 
