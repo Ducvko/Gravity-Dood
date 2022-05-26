@@ -35,6 +35,8 @@ def main():
     spike_trap = Spike([100, 100], mainSurface)
     saw_trap = Saw((100, 200), mainSurface)
 
+    player_sprite.upside_down = False
+
     frame_count = 0
     game_start = False
 

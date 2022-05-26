@@ -8,7 +8,7 @@ class Saw(Traps):
         self.posX = posIn[0]
         self.posY = posIn[1]
 
-        self.shell = [1, 0, 64, 35]
+        self.shell = [2, 0, 128, 70]
         self.def_shell = copy(self.shell)
 
         self.shell_phase = 1
@@ -21,7 +21,7 @@ class Spike(Traps):
         self.posX = posIn[0]
         self.posY = posIn[1]
 
-        self.shell = [0, 7, 32, 16]
+        self.shell = [0, 14, 64, 32]
         self.def_shell = copy(self.shell)
 
         self.shell_phase = 1
