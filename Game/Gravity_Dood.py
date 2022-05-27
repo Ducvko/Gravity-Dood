@@ -18,6 +18,7 @@ import pygame
 import json
 from Assets.Player_Assets.Player import Player
 from Assets.Collidables.Static.Short.Short import Spike, Saw
+from Assets.Collidables.Static.Tall.Tall import Tall_Saw, Spear
 
 def main():
     #-----------------------------Setup------------------------------------------------------#
@@ -34,6 +35,8 @@ def main():
 
     spike_trap = Spike([100, 100], mainSurface)
     saw_trap = Saw((100, 200), mainSurface)
+
+    spear_trap = Spear(mainSurface, [200, 100])
 
     player_sprite.upside_down = False
 
@@ -72,6 +75,9 @@ def main():
 
         saw_trap.draw_trap(0, saw_trap.posX, saw_trap.posY)
         saw_trap.update_animation(frame_count, saw_trap.saw_rate)
+
+        spear_trap.draw_trap(3, spear_trap.posX, spear_trap.posY)
+        spear_trap.update_animation(frame_count,spear_trap.spear_rate)
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()

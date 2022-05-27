@@ -11,11 +11,14 @@ class Traps(ABC):
         
         self.spike_rate = 8
         self.saw_rate = 5
+        self.spear_rate = 15
 
-        self.animations = [pygame.image.load(os.path.join("Game\Assets\Collidables\Static\Short", "Saw Trap - Level 1.png")),   # Saw Spritesheet
-                           pygame.image.load(os.path.join("Game\Assets\Collidables\Static\Short", "Spike_B.png"))]              # Spike Spritesheet
+        self.animations = [pygame.image.load(os.path.join("Game\Assets\Collidables\Static\Short", "Saw Trap - Level 1.png")),            # Saw Spritesheet
+                           pygame.image.load(os.path.join("Game\Assets\Collidables\Static\Short", "Spike_B.png")),                       # Spike Spritesheet
+                           pygame.image.load(os.path.join("Game", "Assets", "Collidables", "Static", "Tall", "Saw Trap - Level 2.png")), # Tall Saw spritesheet
+                           pygame.image.load(os.path.join("Game", "Assets", "Collidables", "Static", "Tall", "Spear.png"))]              # Spear Spritesheet
 
-        for i in range(2):
+        for i in range(4):
             self.animations[i] = pygame.transform.scale2x(self.animations[i])
 
     def draw_trap(self, animation, posX, posY):
