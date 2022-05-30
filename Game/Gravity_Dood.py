@@ -19,6 +19,7 @@ import json
 from Assets.Player_Assets.Player import Player
 from Assets.Collidables.Static.Short.Short import Spike, Saw
 from Assets.Collidables.Static.Tall.Tall import Tall_Saw, Spear
+import os
 
 def main():
     #-----------------------------Setup------------------------------------------------------#
@@ -40,6 +41,12 @@ def main():
     tall_saw = Tall_Saw(mainSurface, [300, 100])
 
     player_sprite.upside_down = False
+
+    with open(os.path.join(os.getcwd(), 'Game', 'Assets', 'Collidables', 'Limit.json'), 'r') as f:
+        Limit = json.load(f)
+        tall_range = range(Limit['static']['tall']['min'], Limit['static']['tall']['max'] + 1)
+        short_range = range(Limit['static']['short']['min'], Limit['static']['short']['max'] + 1)
+        moving_range = range(Limit['moving']['min'], Limit['moving']['max'] + 1)
 
     frame_count = 0
     game_start = False
