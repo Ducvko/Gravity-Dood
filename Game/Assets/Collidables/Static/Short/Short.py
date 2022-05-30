@@ -8,7 +8,7 @@ class Saw(Traps):
         self.posX = posIn[0]
         self.posY = posIn[1]
 
-        self.shell = [2, 0, 128, 70]
+        self.shell = [1.5, 0, 64*1.5, 35*1.5]
         self.def_shell = copy(self.shell)
 
         self.shell_phase = 1

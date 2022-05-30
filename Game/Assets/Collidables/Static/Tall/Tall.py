@@ -18,5 +18,14 @@ class Spear(Traps):
 
 class Tall_Saw(Traps):
 
-    def __init__(self, surface):
+    def __init__(self, surface, posIn):
         super().__init__(surface)
+
+        self.posX = posIn[0]
+        self.posY = posIn[1]
+
+        self.shell = [2, 0, 128, 130]
+        self.def_shell = copy(self.shell)
+
+        self.shell_phase = 1
+        self.max_phase = 30

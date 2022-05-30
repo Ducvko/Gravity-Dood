@@ -37,6 +37,7 @@ def main():
     saw_trap = Saw((100, 200), mainSurface)
 
     spear_trap = Spear(mainSurface, [200, 100])
+    tall_saw = Tall_Saw(mainSurface, [300, 100])
 
     player_sprite.upside_down = False
 
@@ -78,6 +79,9 @@ def main():
 
         spear_trap.draw_trap(3, spear_trap.posX, spear_trap.posY)
         spear_trap.update_animation(frame_count,spear_trap.spear_rate)
+
+        tall_saw.draw_trap(2, tall_saw.posX, tall_saw.posY)
+        tall_saw.update_animation(frame_count, tall_saw.saw_rate)
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
