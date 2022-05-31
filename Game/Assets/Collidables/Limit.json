@@ -1,16 +1,12 @@
 {
     "static": {
         "tall": {
-            "min": 50,
-            "max": 120
+            "min": 200,
+            "max": 500
         },
         "short": {
-            "min": 30,
-            "max": 100
+            "min": 150,
+            "max": 350
         }
-    },
-    "moving": {
-        "min": 100,
-        "max": 200
     }
 }

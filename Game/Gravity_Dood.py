@@ -14,6 +14,7 @@
 #   ...
 #-----------------------------------------------------------------------------
 
+from random import randint, sample
 import pygame
 import json
 from Assets.Player_Assets.Player import Player
@@ -42,14 +43,23 @@ def main():
 
     player_sprite.upside_down = False
 
+    # Opens up a json file and takes the limit values used for spawning traps and assign them variables
     with open(os.path.join(os.getcwd(), 'Game', 'Assets', 'Collidables', 'Limit.json'), 'r') as f:
         Limit = json.load(f)
         tall_range = range(Limit['static']['tall']['min'], Limit['static']['tall']['max'] + 1)
         short_range = range(Limit['static']['short']['min'], Limit['static']['short']['max'] + 1)
-        moving_range = range(Limit['moving']['min'], Limit['moving']['max'] + 1)
+    
+    first_object = True
 
     frame_count = 0
     game_start = False
+
+    trap_types = [spike_trap,
+                  saw_trap,
+                  spear_trap,
+                  tall_saw]
+
+    traps = []
 
     #-----------------------------Program Variable Initialization----------------------------#
     # Set up some data to describe a small circle and its color
@@ -69,26 +79,68 @@ def main():
         #-----------------------------Program Logic---------------------------------------------#
         # Update your game objects and data structures here...
 
+        # Spawning Algorithm
+        # Picks a trap out of a predetermined list containing all trap types at random
+        # Creates a new instance of the selected trap, if it is the first trap spawned
+        # It will be defined as the first trap so that the next object will be spawned
+        # Relative to the previous trap, being the start to the infintie chain
+        i = randint(0 , len(trap_types)-1)
+        if first_object:
+            trap_types[i].posX = 1000
+            if isinstance(trap_types[i], Saw or Tall_Saw):
+                trap_types[i].posY = 10
+            elif isinstance(trap_types[i], Spike):
+                trap_types[i].posY = trap_types[i].shell[3] - 10
+            elif isinstance(trap_types[i], Spear):
+                trap_types[i].posY = trap_types[i].shell[3] - 10
+            traps.append(trap_types[i])
+            first_object = False
+            
+        if isinstance(traps[-1], Spike or Saw):
+            if isinstance(trap_types[i], Spike):
+                if traps[-1].posX == sample(short_range, 1):
+                    spike_trap = Spike([1000, 100], mainSurface)
+                    traps.append(spike_trap)
+            elif isinstance(trap_types[i], Saw):
+                if traps[-1].posX == sample(short_range, 1):
+                    saw_trap = Saw([100, 200], mainSurface)
+                    traps.append(saw_trap)
+
+        else:
+            if isinstance(trap_types[i], Spear):
+                if traps[-1].posX == sample(tall_range, 1):
+                    spear_trap = Spear(mainSurface, [200, 100])
+                    traps.append(spear_trap)
+            elif isinstance(trap_types[i], Tall_Saw):
+                if traps[-1].posX == sample(tall_range, 1):
+                    tall_saw = Tall_Saw(mainSurface, [300, 100])
+                    traps.append(tall_saw)
+
+
+        # fixes all of the traps Y position to a specific point, relative to the orientation of the object and height
+        for current_trap in traps:
+            if isinstance(current_trap, Saw or Tall_Saw):
+                current_trap.posY = 10
+            elif isinstance(current_trap, Spike):
+                current_trap.posY = current_trap.shell[3] - 10
+            elif isinstance(current_trap, Spear):
+                current_trap.posY = current_trap.shell[3] - 10            
+
 
         #-----------------------------Drawing Everything-------------------------------------#
         # We draw everything from scratch on each frame.
         # So first fill everything with the background color
         mainSurface.fill((0, 200, 255))
 
-        player_sprite.frame_update(frame_count)
-        player_sprite.draw_player()
+        for current_trap in traps:
+            current_trap.posX -= 4
 
-        spike_trap.draw_trap(1, spike_trap.posX, spike_trap.posY)
-        spike_trap.update_animation(frame_count, spike_trap.spike_rate)
+        for current_trap in traps:
+            current_trap.update_animation(frame_count, current_trap.framerate)
+            current_trap.draw_trap()
 
-        saw_trap.draw_trap(0, saw_trap.posX, saw_trap.posY)
-        saw_trap.update_animation(frame_count, saw_trap.saw_rate)
-
-        spear_trap.draw_trap(3, spear_trap.posX, spear_trap.posY)
-        spear_trap.update_animation(frame_count,spear_trap.spear_rate)
-
-        tall_saw.draw_trap(2, tall_saw.posX, tall_saw.posY)
-        tall_saw.update_animation(frame_count, tall_saw.saw_rate)
+        if traps[1] == 0 - traps[1].shell[2]:
+            traps.remove(traps[1])
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
