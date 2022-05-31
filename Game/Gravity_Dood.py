@@ -64,6 +64,7 @@ def main():
 
     traps = []
 
+    trap = randint(0 , len(trap_types)-1)
     #-----------------------------Program Variable Initialization----------------------------#
     # Set up some data to describe a small circle and its color
 
@@ -87,41 +88,40 @@ def main():
         # Creates a new instance of the selected trap, if it is the first trap spawned
         # It will be defined as the first trap so that the next object will be spawned
         # Relative to the previous trap, being the start to the infintie chain
-        i = randint(0 , len(trap_types)-1)
         if first_object:
-            trap_types[i].posX = 1000
-            if isinstance(trap_types[i], Saw or Tall_Saw):
-                trap_types[i].posY = 10
-            elif isinstance(trap_types[i], Spike):
-                trap_types[i].posY = surfaceSize[1] - trap_types[i].shell[3] - 10
-            elif isinstance(trap_types[i], Spear):
-                trap_types[i].posY = surfaceSize[1] - trap_types[i].shell[3] - 10
-            traps.append(trap_types[i])
+            trap_types[trap].posX = 1000
+            if isinstance(trap_types[trap], Saw) or isinstance(trap_types[trap], Tall_Saw):
+                trap_types[trap].posY = 10
+            elif isinstance(trap_types[trap], Spike) or isinstance(trap_types[trap], Spear):
+                trap_types[trap].posY = surfaceSize[1] - trap_types[trap].shell[3] - 10
+            traps.append(trap_types[trap])
             first_object = False
             
-        if isinstance(traps[-1], Spike or Saw):
-            if isinstance(trap_types[i], Spike):
+        elif first_object == False:
+            if isinstance(trap_types[trap], Spike):
                 if traps[-1].posX <= 1000 - point_in_sr[0]:
                     point_in_sr = sample(short_range, 1)
-                    spike_trap = Spike([1000, surfaceSize[1] - trap_types[i].shell[3] - 10], mainSurface)
+                    spike_trap = Spike([1000, surfaceSize[1] - trap_types[trap].shell[3] - 10], mainSurface)
                     traps.append(spike_trap)
-            elif isinstance(trap_types[i], Saw):
+                    trap = randint(0 , len(trap_types)-1)
+            elif isinstance(trap_types[trap], Saw):
                 if traps[-1].posX <= 1000 - point_in_sr[0]:
                     point_in_sr = sample(short_range, 1)
                     saw_trap = Saw([1000, 10], mainSurface)
                     traps.append(saw_trap)
-
-        else:
-            if isinstance(trap_types[i], Spear):
+                    trap = randint(0 , len(trap_types)-1)
+            elif isinstance(trap_types[trap], Spear):
                 if traps[-1].posX <= 1000 - point_in_tr[0]:
                     point_in_tr = sample(tall_range, 1)
-                    spear_trap = Spear(mainSurface, [1000, surfaceSize[1] - trap_types[i].shell[3] - 10])
+                    spear_trap = Spear(mainSurface, [1000, surfaceSize[1] - trap_types[trap].shell[3] - 10])
                     traps.append(spear_trap)
-            elif isinstance(trap_types[i], Tall_Saw):
+                    trap = randint(0 , len(trap_types)-1)
+            elif isinstance(trap_types[trap], Tall_Saw):
                 if traps[-1].posX <= 1000 - point_in_tr[0]:
                     point_in_tr = sample(tall_range, 1)
                     tall_saw = Tall_Saw(mainSurface, [1000, 10])
                     traps.append(tall_saw)
+                    trap = randint(0 , len(trap_types)-1)
 
         #-----------------------------Drawing Everything-------------------------------------#
         # We draw everything from scratch on each frame.
@@ -141,7 +141,10 @@ def main():
                     if traps[1]:
                         traps.remove(traps[0])
                 except IndexError:
-                    break
+                    pass
+
+        player_sprite.draw_player()
+        player_sprite.frame_update(frame_count)
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
         
