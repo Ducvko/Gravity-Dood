@@ -48,6 +48,9 @@ def main():
         Limit = json.load(f)
         tall_range = range(Limit['static']['tall']['min'], Limit['static']['tall']['max'] + 1)
         short_range = range(Limit['static']['short']['min'], Limit['static']['short']['max'] + 1)
+
+    point_in_sr = sample(short_range, 1)
+    point_in_tr = sample(tall_range, 1)
     
     first_object = True
 
@@ -90,42 +93,35 @@ def main():
             if isinstance(trap_types[i], Saw or Tall_Saw):
                 trap_types[i].posY = 10
             elif isinstance(trap_types[i], Spike):
-                trap_types[i].posY = trap_types[i].shell[3] - 10
+                trap_types[i].posY = surfaceSize[1] - trap_types[i].shell[3] - 10
             elif isinstance(trap_types[i], Spear):
-                trap_types[i].posY = trap_types[i].shell[3] - 10
+                trap_types[i].posY = surfaceSize[1] - trap_types[i].shell[3] - 10
             traps.append(trap_types[i])
             first_object = False
             
         if isinstance(traps[-1], Spike or Saw):
             if isinstance(trap_types[i], Spike):
-                if traps[-1].posX == sample(short_range, 1):
-                    spike_trap = Spike([1000, 100], mainSurface)
+                if traps[-1].posX <= 1000 - point_in_sr:
+                    point_in_sr = sample(short_range, 1)
+                    spike_trap = Spike([1000, surfaceSize[1] - trap_types[i].shell[3] - 10], mainSurface)
                     traps.append(spike_trap)
             elif isinstance(trap_types[i], Saw):
-                if traps[-1].posX == sample(short_range, 1):
-                    saw_trap = Saw([100, 200], mainSurface)
+                if traps[-1].posX <= 1000 - point_in_sr:
+                    point_in_sr = sample(short_range, 1)
+                    saw_trap = Saw([1000, 10], mainSurface)
                     traps.append(saw_trap)
 
         else:
             if isinstance(trap_types[i], Spear):
-                if traps[-1].posX == sample(tall_range, 1):
-                    spear_trap = Spear(mainSurface, [200, 100])
+                if traps[-1].posX <= 1000 - point_in_tr:
+                    point_in_tr = sample(tall_range, 1)
+                    spear_trap = Spear(mainSurface, [1000, surfaceSize[1] - trap_types[i].shell[3] - 10])
                     traps.append(spear_trap)
             elif isinstance(trap_types[i], Tall_Saw):
-                if traps[-1].posX == sample(tall_range, 1):
-                    tall_saw = Tall_Saw(mainSurface, [300, 100])
+                if traps[-1].posX <= 1000 - point_in_tr:
+                    point_in_tr = sample(tall_range, 1)
+                    tall_saw = Tall_Saw(mainSurface, [1000, 10])
                     traps.append(tall_saw)
-
-
-        # fixes all of the traps Y position to a specific point, relative to the orientation of the object and height
-        for current_trap in traps:
-            if isinstance(current_trap, Saw or Tall_Saw):
-                current_trap.posY = 10
-            elif isinstance(current_trap, Spike):
-                current_trap.posY = current_trap.shell[3] - 10
-            elif isinstance(current_trap, Spear):
-                current_trap.posY = current_trap.shell[3] - 10            
-
 
         #-----------------------------Drawing Everything-------------------------------------#
         # We draw everything from scratch on each frame.
@@ -139,9 +135,13 @@ def main():
             current_trap.update_animation(frame_count, current_trap.framerate)
             current_trap.draw_trap()
 
-        if traps[1] == 0 - traps[1].shell[2]:
-            traps.remove(traps[1])
-
+        if traps:
+            if traps[0] == (0 - traps[0].shell[2]):
+                try:
+                    if traps[1]:
+                        traps.remove(traps[0])
+                except IndexError:
+                    break
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
         
