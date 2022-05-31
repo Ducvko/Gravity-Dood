@@ -101,24 +101,24 @@ def main():
             
         if isinstance(traps[-1], Spike or Saw):
             if isinstance(trap_types[i], Spike):
-                if traps[-1].posX <= 1000 - point_in_sr:
+                if traps[-1].posX <= 1000 - point_in_sr[0]:
                     point_in_sr = sample(short_range, 1)
                     spike_trap = Spike([1000, surfaceSize[1] - trap_types[i].shell[3] - 10], mainSurface)
                     traps.append(spike_trap)
             elif isinstance(trap_types[i], Saw):
-                if traps[-1].posX <= 1000 - point_in_sr:
+                if traps[-1].posX <= 1000 - point_in_sr[0]:
                     point_in_sr = sample(short_range, 1)
                     saw_trap = Saw([1000, 10], mainSurface)
                     traps.append(saw_trap)
 
         else:
             if isinstance(trap_types[i], Spear):
-                if traps[-1].posX <= 1000 - point_in_tr:
+                if traps[-1].posX <= 1000 - point_in_tr[0]:
                     point_in_tr = sample(tall_range, 1)
                     spear_trap = Spear(mainSurface, [1000, surfaceSize[1] - trap_types[i].shell[3] - 10])
                     traps.append(spear_trap)
             elif isinstance(trap_types[i], Tall_Saw):
-                if traps[-1].posX <= 1000 - point_in_tr:
+                if traps[-1].posX <= 1000 - point_in_tr[0]:
                     point_in_tr = sample(tall_range, 1)
                     tall_saw = Tall_Saw(mainSurface, [1000, 10])
                     traps.append(tall_saw)
