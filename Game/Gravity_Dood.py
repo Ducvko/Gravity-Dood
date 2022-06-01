@@ -85,7 +85,7 @@ def main():
 
         if game_state == 'Game':
             if ev.type == pygame.KEYDOWN:
-                if ev.key == pygame.K_SPACE:
+                if ev.key == pygame.K_SPACE and falling == False:
                     player_sprite.upside_down = not player_sprite.upside_down
                     falling = True   
             #-----------------------------Program Logic---------------------------------------------#
@@ -180,6 +180,8 @@ def main():
                             traps.remove(traps[0])
                     except IndexError:
                         pass
+
+        # if game_state == 'Game Over':
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()
