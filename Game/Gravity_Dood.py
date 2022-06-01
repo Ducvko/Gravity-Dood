@@ -20,8 +20,12 @@ import json
 from Assets.Player_Assets.Player import Player
 from Assets.Collidables.Static.Short.Short import Spike, Saw
 from Assets.Collidables.Static.Tall.Tall import Tall_Saw, Spear
+from Assets.Collidables.Game_States.Start import Title
+from Assets.Collidables.Game_States.Help import Help
+from Assets.Collidables.Game_States.Game_Over import GameOver
 import os
 from time import sleep
+import webbrowser
 
 def main():
     #-----------------------------Setup------------------------------------------------------#
@@ -43,7 +47,15 @@ def main():
 
     spear_trap = Spear(mainSurface, [200, 100])
     tall_saw = Tall_Saw(mainSurface, [300, 100])
+
+    title_screen = Title(mainSurface)
+    help_screen = Help(mainSurface)
+    game_over = GameOver(mainSurface)
+    help_state = False
     #-----------------------------Program Variable Initialization----------------------------#
+
+    instructions = 'file:///' + os.path.join(os.getcwd(), 'Game', 'Assets', 'Instructions.html')
+    print(instructions)
 
     player_sprite.posY = surfaceSize[1] - player_sprite.shell[3] - 10
     player_sprite.upside_down = False
@@ -67,21 +79,46 @@ def main():
                   tall_saw]
 
     traps = []
-    trap = randint(0, len(trap_types)-1)
+    trap = randint(0, len(trap_types)-1) # The starting point of the infinite chain of trap spawning
+                                         # Chooses a random number when the program starts to act as a starting point for the nex trap to be randomly chosen
 
     frame_count = 0
     game_start = False
 
-    game_state = 'Game'
+    game_state = 'Start'
 
     #-----------------------------Main Program Loop---------------------------------------------#
     while True:       
         mainSurface.blit(bg, (-43, -95))
 
+        mouse = pygame.mouse.get_pos()
+        mouse_hitbox = pygame.Rect(mouse[0], mouse[1], 2, 2)
+
         #-----------------------------Event Handling-----------------------------------------#
         ev = pygame.event.poll()    # Look for any event
         if ev.type == pygame.QUIT:  # Window close button clicked?
             break                   #   ... leave game loop
+
+        if game_state == 'Start':
+            title_buttons = title_screen.draw_elements() # element 0 is the hitbox for the start button and 1 is the credits button
+
+            if ev.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1:
+                if pygame.Rect.colliderect(mouse_hitbox, title_buttons[0]):
+                    game_state = 'Game'
+
+            if ev.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1:
+                if pygame.Rect.colliderect(mouse_hitbox, title_buttons[1]):
+                    game_state = 'Help'
+                    help_state = True
+
+        if game_state == 'Help':
+            if help_state:
+                webbrowser.open_new_tab(instructions)
+                help_state = not help_state
+            back_button = help_screen.draw_element()
+            if ev.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1:
+                if pygame.Rect.colliderect(mouse_hitbox, back_button):
+                    game_state = 'Start'
 
         if game_state == 'Game':
             if ev.type == pygame.KEYDOWN:
@@ -166,11 +203,15 @@ def main():
                             with open(os.path.join(os.getcwd(), 'Game', 'Assets', 'Highscore.json'), 'w') as j:
                                 data_to_write = {'highscore': score}
                                 json.dump(data_to_write, j, indent=2)
+                                highscore = score
                         else:
-                           if score_file['highscore'] < score:
+                            if score_file['highscore'] < score:
                                with open(os.path.join(os.getcwd(), 'Game', 'Assets', 'Highscore.json'), 'w') as j:
                                 data_to_write = {'highscore': score}
                                 json.dump(data_to_write, j, indent=2)
+                                highscore = score
+                            else:
+                                highscore = score_file['highscore']
                     sleep(1)
 
             if traps:
@@ -181,7 +222,24 @@ def main():
                     except IndexError:
                         pass
 
-        # if game_state == 'Game Over':
+        if game_state == 'Game Over':
+            game_over_buttons = game_over.draw_elements(score, highscore) # element 0 is quit button
+                                                                          # element 1 is menu button
+                                                                          # element 2 is restart button
+            
+            if ev.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1:
+                if pygame.Rect.colliderect(mouse_hitbox, game_over_buttons[0]):
+                    break
+                if pygame.Rect.colliderect(mouse_hitbox, game_over_buttons[1]):
+                    game_state = 'Start'
+                if pygame.Rect.colliderect(mouse_hitbox, game_over_buttons[2]):
+                    player_sprite.upside_down = False
+                    falling = False
+                    player_sprite.posY = surfaceSize[1] - player_sprite.shell[3] - 10
+                    traps = []
+                    first_object = True
+                    game_state = 'Game'
+
 
         # Now the surface is ready, tell pygame to display it!
         pygame.display.flip()

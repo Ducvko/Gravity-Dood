@@ -1,7 +1,7 @@
 {
     "static": {
         "tall": {
-            "min": 150,
+            "min": 200,
             "max": 450
         },
         "short": {
