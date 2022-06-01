@@ -59,7 +59,7 @@ class Player:
             self.player_run()
 
     def gravity(self, gravity_acceleration):
-        speed_modifier = gravity_acceleration // 60
+        speed_modifier = gravity_acceleration / 60
 
         if self.upside_down:
             self.posY -= self.speed
