@@ -4,8 +4,9 @@ import os
 
 class Help:
 
-    def __init__(self, main_surface):
+    def __init__(self, main_surface, surfaceY):
         self.surface = main_surface
+        self.surfaceY = surfaceY
 
         font = pygame.font.SysFont(name='impact', size=35)
 

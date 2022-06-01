@@ -39,6 +39,7 @@ def main():
     mainSurface = pygame.display.set_mode((surfaceSize[0], surfaceSize[1]))
 
     bg = pygame.image.load(os.path.join('Game', 'Assets', 'bg.png'))
+    bg_posX = 0
 
     player_sprite = Player((150, 200), mainSurface, surfaceSize)
 
@@ -49,7 +50,7 @@ def main():
     tall_saw = Tall_Saw(mainSurface, [300, 100])
 
     title_screen = Title(mainSurface)
-    help_screen = Help(mainSurface)
+    help_screen = Help(mainSurface, surfaceSize[1])
     game_over = GameOver(mainSurface)
     help_state = False
     #-----------------------------Program Variable Initialization----------------------------#
@@ -57,9 +58,13 @@ def main():
     instructions = 'file:///' + os.path.join(os.getcwd(), 'Game', 'Assets', 'Instructions.html')
     print(instructions)
 
+    # Fixes the player to be 10 pixels off the bottom of the window
     player_sprite.posY = surfaceSize[1] - player_sprite.shell[3] - 10
+    # The default orientation of the player is right-side down
     player_sprite.upside_down = False
+    # by default the player is not falling
     falling = False
+    # constant for gravity
     player_gravity = 60
 
     # Opens up a json file and takes the limit values used for spawning traps and assign them variables
@@ -68,29 +73,38 @@ def main():
         tall_range = range(Limit['static']['tall']['min'], Limit['static']['tall']['max'] + 1)
         short_range = range(Limit['static']['short']['min'], Limit['static']['short']['max'] + 1)
 
+    # Defines a point within the spawning limit which then the next trap to be spawned will use
     point_in_sr = sample(short_range, 1)
     point_in_tr = sample(tall_range, 1)
     
+    # Boolean value for seeing if the trap which is to be spawned is the first trap spawned
     first_object = True
 
+    # Defines a list containing all 4 possible trap types
     trap_types = [spike_trap,
                   saw_trap,
                   spear_trap,
                   tall_saw]
 
+    # Defines a list which will contain all the traps on the screen
     traps = []
     trap = randint(0, len(trap_types)-1) # The starting point of the infinite chain of trap spawning
-                                         # Chooses a random number when the program starts to act as a starting point for the nex trap to be randomly chosen
+                                         # Chooses a random number when the program starts to act as
+                                         # A starting point for the next trap to be randomly chosen
 
     frame_count = 0
+
+    # A boolean value which is used to start the counting of score
     game_start = False
 
     game_state = 'Start'
 
-    #-----------------------------Main Program Loop---------------------------------------------#
-    while True:       
-        mainSurface.blit(bg, (-43, -95))
+    # prepares and plays the background music infinitely
+    music = pygame.mixer.music.load(os.path.join(os.getcwd(),'Game', 'Assets', 'Jetpack Joyride Main Theme.oggvorbis.ogg'))
+    pygame.mixer.music.play(-1)
 
+    #-----------------------------Main Program Loop---------------------------------------------#
+    while True:
         mouse = pygame.mouse.get_pos()
         mouse_hitbox = pygame.Rect(mouse[0], mouse[1], 2, 2)
 
@@ -100,6 +114,8 @@ def main():
             break                   #   ... leave game loop
 
         if game_state == 'Start':
+            mainSurface.blit(bg, (bg_posX, -95))
+            
             title_buttons = title_screen.draw_elements() # element 0 is the hitbox for the start button and 1 is the credits button
 
             if ev.type == pygame.MOUSEBUTTONDOWN and pygame.mouse.get_pressed()[0] == 1:
@@ -112,6 +128,8 @@ def main():
                     help_state = True
 
         if game_state == 'Help':
+            mainSurface.blit(bg, (bg_posX, -95))
+
             if help_state:
                 webbrowser.open_new_tab(instructions)
                 help_state = not help_state
@@ -121,6 +139,14 @@ def main():
                     game_state = 'Start'
 
         if game_state == 'Game':
+
+            mainSurface.blit(bg, (bg_posX, -95))
+
+            bg_posX -= 4
+
+            if bg_posX <= surfaceSize[0] - ((bg.get_width() // 2) + surfaceSize[0]):
+                bg_posX = 0
+
             if ev.type == pygame.KEYDOWN:
                 if ev.key == pygame.K_SPACE and falling == False:
                     player_sprite.upside_down = not player_sprite.upside_down
@@ -143,7 +169,7 @@ def main():
             if first_object:
                 trap_types[trap].posX = 1000
                 if isinstance(trap_types[trap], Saw) or isinstance(trap_types[trap], Tall_Saw):
-                    trap_types[trap].posY = 10
+                    trap_types[trap].posY = 0
                 elif isinstance(trap_types[trap], Spike) or isinstance(trap_types[trap], Spear):
                     trap_types[trap].posY = surfaceSize[1] - trap_types[trap].shell[3] - 10
                 traps.append(trap_types[trap])
@@ -159,7 +185,7 @@ def main():
                 elif isinstance(trap_types[trap], Saw):
                     if traps[-1].posX <= 1000 - point_in_sr[0]:
                         point_in_sr = sample(short_range, 1)
-                        saw_trap = Saw([1000, 10], mainSurface)
+                        saw_trap = Saw([1000, 0], mainSurface)
                         traps.append(saw_trap)
                         trap = randint(0 , len(trap_types)-1)
                 elif isinstance(trap_types[trap], Spear):
@@ -171,7 +197,7 @@ def main():
                 elif isinstance(trap_types[trap], Tall_Saw):
                     if traps[-1].posX <= 1000 - point_in_tr[0]:
                         point_in_tr = sample(tall_range, 1)
-                        tall_saw = Tall_Saw(mainSurface, [1000, 10])
+                        tall_saw = Tall_Saw(mainSurface, [1000, 0])
                         traps.append(tall_saw)
                         trap = randint(0 , len(trap_types)-1)
 
@@ -212,8 +238,6 @@ def main():
                                 highscore = score
                             else:
                                 highscore = score_file['highscore']
-                    sleep(1)
-
             if traps:
                 if traps[0] == (0 - traps[0].shell[2]):
                     try:
@@ -238,6 +262,7 @@ def main():
                     player_sprite.posY = surfaceSize[1] - player_sprite.shell[3] - 10
                     traps = []
                     first_object = True
+                    bg_posX = 0
                     game_state = 'Game'
 
 
