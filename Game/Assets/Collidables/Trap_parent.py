@@ -10,7 +10,9 @@ class Traps(ABC):
         self.main_surface = surface
 
     def draw_trap(self):
-        self.main_surface.blit(self._animation, (self.posX, self.posY), self.shell)
+        hitbox = self.main_surface.blit(self._animation, (self.posX, self.posY), self.shell)
+
+        return hitbox
 
     def animation(self):
         if self.shell_phase <= self.max_phase - 1:

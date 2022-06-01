@@ -4,7 +4,7 @@ from copy import copy
 
 class Player:
 
-    def __init__(self, posIn, surface, surface_dimensions: list, speed):
+    def __init__(self, posIn, surface, surface_dimensions: list):
         self.posX = posIn[0]
         self.posY = posIn[1]
         self.main_surface = surface
@@ -27,20 +27,22 @@ class Player:
         self.max_phase = 6     
         self.player_rate = 6
 
-        self.speed = speed
+        self.speed = 1
         self.upside_down = False
 
     def draw_player(self):
 
-        hitbox = pygame.Surface((self.shell[2], self.shell[3]))
+        hitbox = pygame.Surface((64, self.shell[3]))
         hitbox.set_colorkey((0,0,0))
 
-        hitbox.blit(self.animations, (0, 0), self.shell)
+        hitbox.blit(self.animations, (-36, 0), self.shell)
 
         if self.upside_down:
             hitbox = pygame.transform.flip(hitbox, False, True)
 
-        self.main_surface.blit(hitbox, (self.posX, self.posY))   
+        hitbox = self.main_surface.blit(hitbox, (self.posX, self.posY))
+        
+        return hitbox
 
     def player_run(self):
 
@@ -55,4 +57,19 @@ class Player:
     def frame_update(self, current_frame):
         if current_frame % self.player_rate == 0:
             self.player_run()
+
+    def gravity(self, gravity_acceleration):
+        speed_modifier = gravity_acceleration // 60
+
+        if self.upside_down:
+            self.posY -= self.speed
+            self.speed = self.speed + speed_modifier
         
+        else:
+            self.posY += self.speed
+            self.speed = self.speed + speed_modifier
+
+        if self.posY >= self.surfaceY - self.shell[3] - 10:
+            self.posY = self.surfaceY - self.shell[3] - 10
+        elif self.posY <= 10:
+            self.posY = 10
