@@ -52,7 +52,7 @@ class Saw(Traps):
         self.posX = posIn[0]
         self.posY = posIn[1]
 
-        spritesheet = pygame.image.load(os.path.join("Game\Assets\Collidables\Static\Short", "Saw Trap - Level 1.png"))
+        spritesheet = pygame.image.load(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Assets', 'Collidables', 'Static', 'Short', "Saw Trap - Level 1.png"))
         self._animation = pygame.transform.scale(spritesheet, (1024*1.5, 64*1.5))
 
         self.shell = [1.5, 0, 64*1.5, 35*1.5]
@@ -111,7 +111,7 @@ class Spike(Traps):
         self.posX = posIn[0]
         self.posY = posIn[1]
 
-        spritesheet = pygame.image.load(os.path.join("Game\Assets\Collidables\Static\Short", "Spike_B.png"))
+        spritesheet = pygame.image.load(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Assets', 'Collidables', 'Static', 'Short', "Spike_B.png"))
         self._animation = pygame.transform.scale2x(spritesheet)
 
         self.shell = [0, 14, 64, 32]

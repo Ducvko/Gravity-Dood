@@ -44,7 +44,7 @@ class Title:
 
         self.title = title_font.render('GRAVITY DOOD', True, (230, 230, 230), None)
 
-        buttons = pygame.image.load(os.path.join('Game', 'Assets', 'Collidables', 'Game_States', 'buttons.png'))
+        buttons = pygame.image.load(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Assets', 'Collidables', 'Game_States', 'buttons.png'))
         self.button_sheet = pygame.transform.scale2x(buttons)
         self.start_button = [384 * 2, 1 * 2, 64 * 2, 30 * 2]
         self.credits_button = [448 * 2, 1 * 2, 80 * 2, 30 * 2]

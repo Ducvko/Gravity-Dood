@@ -51,7 +51,7 @@ class GameOver:
 
         self.score_font = pygame.font.SysFont(name='trebuchetms', size=35)
 
-        buttons = pygame.image.load(os.path.join('Game', 'Assets', 'Collidables', 'Game_States', 'buttons.png'))
+        buttons = pygame.image.load(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Assets', 'Collidables', 'Game_States', 'buttons.png'))
         self.button_sheet = pygame.transform.scale2x(buttons)
         self.quit_button = [592 * 2, 1 * 2, 64 * 2, 30 * 2]
         self.menu_button = [528 * 2, 1 * 2, 64 * 2, 30 * 2]

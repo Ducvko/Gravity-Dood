@@ -65,7 +65,7 @@ class Player:
         self.main_surface = surface
         self.surfaceY = surface_dimensions[1]
 
-        self.animations = pygame.image.load(os.path.join("Game\Assets\Player_Assets\Animations", "adventurer-v1.5-Sheet.png"))
+        self.animations = pygame.image.load(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Assets', 'Player_Assets', 'Animations', "adventurer-v1.5-Sheet.png"))
 
         self.animations = pygame.transform.scale(self.animations, (385*3, 592*3))
         
