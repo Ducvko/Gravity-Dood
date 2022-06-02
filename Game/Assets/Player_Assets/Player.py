@@ -2,6 +2,7 @@ import pygame
 import os
 from copy import copy
 
+
 class Player:
     """
     A class which represents the player.
