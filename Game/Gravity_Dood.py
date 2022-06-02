@@ -43,7 +43,7 @@ def main():
     mainSurface = pygame.display.set_mode((surfaceSize[0], surfaceSize[1]))
 
     # The file path to the background png file used as the background
-    bg = pygame.image.load(os.path.join('Game', 'Assets', 'bg.png'))
+    bg = pygame.image.load(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Game', 'Assets', 'bg.png'))
 
     # The default x position for the background when blitting the background onto the main surface
     bg_posX = 0
@@ -65,13 +65,13 @@ def main():
     game_over = GameOver(mainSurface)
 
     # prepares and plays the background music infinitely
-    pygame.mixer.music.load(os.path.join(os.getcwd(),'Game', 'Assets', 'Jetpack Joyride Main Theme.oggvorbis.ogg'))
+    pygame.mixer.music.load(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Game', 'Assets', 'Jetpack Joyride Main Theme.oggvorbis.ogg'))
     pygame.mixer.music.play(-1)
     #-----------------------------Program Variable Initialization----------------------------#
 
     # The direct pathway do the instructions file, dynamically changes depending on where the repo is
     # and who's computer this is on
-    instructions = 'file:///' + os.path.join(os.getcwd(), 'Game', 'Assets', 'Instructions.html')
+    instructions = 'file:///' + os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Game', 'Assets', 'Instructions.html')
 
     # Boolean variable which controls when the instructions file should be opened in browser
     help_state = False
@@ -86,7 +86,7 @@ def main():
     player_gravity = 60
 
     # Opens up a json file and takes the limit values used for spawning traps and assign them variables
-    with open(os.path.join(os.getcwd(), 'Game', 'Assets', 'Collidables', 'Limit.json'), 'r') as f:
+    with open(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Game', 'Assets', 'Collidables', 'Limit.json'), 'r') as f:
         Limit = json.load(f)
         tall_range = range(Limit['static']['tall']['min'], Limit['static']['tall']['max'] + 1)
         short_range = range(Limit['static']['short']['min'], Limit['static']['short']['max'] + 1)
@@ -289,13 +289,13 @@ def main():
                     score = int((final_time - start_of_game) + score_modifier) # Adds the score modifier to the difference in final and inital time
 
                     # Opens up the highscore file which will contain either an empty value: "\n" or a highscore previously set
-                    with open(os.path.join(os.getcwd(), 'Game', 'Assets', 'Highscore.json'), 'r') as f:
+                    with open(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Game', 'Assets', 'Highscore.json'), 'r') as f:
                         score_file = json.load(f)
 
                         # Checks if teh highscore is an empty value if it is, replace the 
                         # empty value with the score which was just set
                         if score_file['highscore'] == '\n':
-                            with open(os.path.join(os.getcwd(), 'Game', 'Assets', 'Highscore.json'), 'w') as j:
+                            with open(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Game', 'Assets', 'Highscore.json'), 'w') as j:
                                 data_to_write = {'highscore': score}
                                 json.dump(data_to_write, j, indent=2)
                                 highscore = score
@@ -306,7 +306,7 @@ def main():
                         # If it is not greater do not perform any modifications on this file
                         else:
                             if score_file['highscore'] < score:
-                               with open(os.path.join(os.getcwd(), 'Game', 'Assets', 'Highscore.json'), 'w') as j:
+                               with open(os.getcwd().replace("\\dist\\Gravity_Dood", "") + "\\" + os.path.join('Game', 'Assets', 'Highscore.json'), 'w') as j:
                                 data_to_write = {'highscore': score}
                                 json.dump(data_to_write, j, indent=2)
                                 highscore = score
