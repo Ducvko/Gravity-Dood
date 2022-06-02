@@ -1,17 +1,22 @@
 #-----------------------------------------------------------------------------
-# Name:        Assignment Template (assignment.py)
-# Purpose:     A description of your program goes here.
+# Name:        Gravity Dood
+# Purpose:     An infinite platformer inspired by gravity guy, the main point of the game
+#              is to avoid obstacles by 'Flipping' Gravity.
 #
-# Author:      Mr. Brooks
-# Created:     13-Sept-2020
-# Updated:     13-Sept-2020
+# Author:      Yusuf Ahmad
+# Created:     24-May-2022
+# Updated:     1-June-2022
 #-----------------------------------------------------------------------------
-#I think this project deserves a level XXXXXX because ...
+#I think this project deserves a level 4+ because ...
 #
 #Features Added:
-#   ...
-#   ...
-#   ...
+#   Object Oriented
+#   Reading and writing to files (lines: 64-83, 289-309)
+#   Smart spawning algorithm (lines: 219-251)
+#   Background music (lines: 66-67)
+#   Opening help file in browser (lines: 72, 172)
+#   Physics, Gravity and Acceleration 
+#    (gravity in Player.py gravity() method, called at lines: 258-267; Acceleration in lines: 124, 126, 186)
 #-----------------------------------------------------------------------------
 
 from random import randint, sample
@@ -24,7 +29,6 @@ from Assets.Collidables.Game_States.Start import Title
 from Assets.Collidables.Game_States.Help import Help
 from Assets.Collidables.Game_States.Game_Over import GameOver
 import os
-from time import sleep
 import webbrowser
 
 def main():
@@ -59,12 +63,15 @@ def main():
     title_screen = Title(mainSurface)
     help_screen = Help(mainSurface, surfaceSize[1])
     game_over = GameOver(mainSurface)
+
+    # prepares and plays the background music infinitely
+    pygame.mixer.music.load(os.path.join(os.getcwd(),'Game', 'Assets', 'Jetpack Joyride Main Theme.oggvorbis.ogg'))
+    pygame.mixer.music.play(-1)
     #-----------------------------Program Variable Initialization----------------------------#
 
     # The direct pathway do the instructions file, dynamically changes depending on where the repo is
     # and who's computer this is on
     instructions = 'file:///' + os.path.join(os.getcwd(), 'Game', 'Assets', 'Instructions.html')
-    print(instructions)
 
     # Boolean variable which controls when the instructions file should be opened in browser
     help_state = False
@@ -112,9 +119,6 @@ def main():
     # Default Game State
     game_state = 'Start'
 
-    # prepares and plays the background music infinitely
-    pygame.mixer.music.load(os.path.join(os.getcwd(),'Game', 'Assets', 'Jetpack Joyride Main Theme.oggvorbis.ogg'))
-    pygame.mixer.music.play(-1)
 
     # Defines a speed which the background moves at and which traps move at
     speed = 4
@@ -331,7 +335,7 @@ def main():
                     game_state = 'Start'
 
                 # If the restart button is pressed sets all important variables back to their defaults 
-                # And restarts the game directly
+                # and restarts the game directly
                 if pygame.Rect.colliderect(mouse_hitbox, game_over_buttons[2]):
                     player_sprite.upside_down = False
                     player_sprite.speed = 1
